@@ -1,36 +1,97 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# meraipu — Your IPU. Simplified.
 
-## Getting Started
+A frontend-only syllabus information web app for **Guru Gobind Singh Indraprastha University (IPU)**. Built with Next.js 14 (App Router), Tailwind CSS, and static MDX content. No backend or database.
 
-First, run the development server:
+## Run locally
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Build for production
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm start
+```
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## How to add a new subject
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Create a new MDX file under `content/year<N>/<branch>/<slug>.mdx`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+   - `year<N>`: use `year1`, `year2`, or `year3`.
+   - `<branch>`: folder name matching a branch slug (e.g. `cse`, `it`, `bca`). See **How to add a new branch** if the branch folder doesn’t exist.
+   - `<slug>`: URL-friendly name (e.g. `data-structures`, `mathematics-1`). This becomes the subject URL segment.
 
-## Deploy on Vercel
+2. Use the following **frontmatter schema** (no body content required):
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```yaml
+---
+title: "Subject Full Name"
+code: "SUB-XXX"
+year: 2
+branch: "cse"
+branchName: "Computer Science & Engineering"
+credits: 4
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+units:
+  - title: "Unit 1: Title"
+    content: |
+      Multi-line syllabus content for this unit.
+  - title: "Unit 2: Title"
+    content: |
+      More content...
+  # ... up to Unit 4 or as needed
+
+practicalFiles:   # optional
+  - title: "Lab File 2024"
+    url: "https://drive.google.com/file/d/XXXXX/view"
+    type: "pdf"
+
+pyqs:            # optional
+  - title: "End Sem 2023"
+    url: "https://drive.google.com/file/d/XXXXX/view"
+    type: "pdf"
+---
+```
+
+- **Required fields:** `title`, `code`, `year`, `branch`, `branchName`, `credits`, `units`.
+- **Optional:** `practicalFiles`, `pyqs` (arrays of `{ title, url, type }`).
+- No code changes are needed; the app discovers the new file at build time.
+
+---
+
+## How to add a new branch
+
+1. **Create content folders** for each year you want to support:
+   - `content/year1/<new-branch>/`
+   - `content/year2/<new-branch>/`
+   - etc.  
+   Add MDX subject files inside these folders as needed.
+
+2. **Register the branch** in `constants/branches.ts`:
+
+   - Add a new entry to the `BRANCHES` object: `slug: "Display Name"`.
+   - Use a short, URL-friendly key (e.g. `biotech: "Biotechnology"`).
+
+The branch will then appear on the year selection page and in breadcrumbs. Subject list for that branch comes from the MDX files in the folder; if the folder is empty, the app shows a “Coming soon” state.
+
+---
+
+## Tech stack
+
+- **Framework:** Next.js 14 (App Router)
+- **Styling:** Tailwind CSS v3
+- **Content:** MDX files, frontmatter parsed with `gray-matter` at build time
+- **Fonts:** Syne (display), DM Sans (body) via Google Fonts
+- **Icons:** Lucide React
+- **Theme:** next-themes (light/dark mode)
+
+## License
+
+MIT
