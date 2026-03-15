@@ -4,8 +4,17 @@ A frontend-only syllabus information web app for **Guru Gobind Singh Indraprasth
 
 ## Run locally
 
+- **Node:** Use Node.js 18.17 or later (see `engines` in `package.json`).
+- Prefer **`npm ci`** when `package-lock.json` is present so dependencies match exactly (avoids missing styles or build issues on another machine).
+
 ```bash
-npm install
+npm ci
+npm run dev
+```
+
+If you don't have the lock file, use `npm install` then run:
+
+```bash
 npm run dev
 ```
 
